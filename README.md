@@ -1,62 +1,150 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400"></a></p>
+# Cadastro de cliente CRUD
 
-<p align="center">
-<a href="https://travis-ci.org/laravel/framework"><img src="https://travis-ci.org/laravel/framework.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+/clients
 
-## About Laravel
+POST -> 201 ( Created ) <-OK
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+- ID ( Gerado) <-OK
+- Nome <-OK
+- Documento ( Validado Rg, CPF) <- OK
+- email <- OK
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+```json
+{
+    "name": "eu",
+    "email": "umemail@legal.com",
+    "document": "12345679"
+}
+```
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+GET -> clients/{id} 200 <- OK
+```json
+{
+    "id": 1,
+    "name": "eu",
+    "email": "umemail@legal.com",
+    "document": "12345679"
+}
+```
+Se não encontrar, retorna 404 <- OK
 
-## Learning Laravel
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains over 1500 video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
 
-## Laravel Sponsors
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the Laravel [Patreon page](https://patreon.com/taylorotwell).
+GET /clients <- OK
 
-### Premium Partners
+PARAMS
+    - Data Para frente do pedido <-OK
+    - Até Valor do Pedido ( Pedidos com valor até tanto) <-OK
+    - Acima de valor do Pedido ( Pedidos com valor até tanto) <-OK
+    - Exportar como relatório `Se passar o parametro deverá exportar como um relatório e enviar por e-mail, fazer como um job.`
 
-- **[Vehikl](https://vehikl.com/)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Cubet Techno Labs](https://cubettech.com)**
-- **[Cyber-Duck](https://cyber-duck.co.uk)**
-- **[Many](https://www.many.co.uk)**
-- **[Webdock, Fast VPS Hosting](https://www.webdock.io/en)**
-- **[DevSquad](https://devsquad.com)**
-- **[Curotec](https://www.curotec.com/)**
-- **[OP.GG](https://op.gg)**
+```json
+[
+    {
+        "id": 1,
+        "name": "eu",
+        "orders": [
+            {
+                "id": 1,
+                "produts": [...],
+                "value": 125.50, //Valor na data da compra
+            }
+        ]
+    }
+]
+```
 
-## Contributing
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+Em caso de falha retornar um Bad Request ( 400 )
+Exemplo de retorno.
+```json
 
-## Code of Conduct
+{
+    "success": false,
+    "errors": [
+        {
+            "field": "document",
+            "message":  "Documento inválido."
+        },
+        {
+            "field": "name",
+            "message": "O nome é requerido"
+        },
+        {
+            "field": "email",
+            "message": "O e-mail precisa ser válido."
+        }
+    ]
+}
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+```
 
-## Security Vulnerabilities
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+Para pesquisa
 
-## License
+/products <-OK
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+POST -> 201 ( Created )  <-OK
+
+- ID ( Gerado) <-OK
+- Nome <-OK
+- price <-OK
+
+
+```json
+{
+    "name": "Nome do produto",
+    "price": 10.5
+}
+```
+
+GET -> products/{id} 200 <-OK
+```json
+{
+    "id": 1,
+    "name": "Nome do produto",
+    "price": 10.5
+}
+```
+Se não encontrar, retorna 404 <-OK
+
+
+Em caso de falha retornar um Bad Request ( 400 ) <-OK
+Exemplo de retorno.
+```json
+
+{
+    "success": "false",
+    "errors": [
+        {
+            "field": "price",
+            "message":  "O preço é obrigatório"
+        }
+    ]
+}
+```
+
+
+
+/order <-OK
+
+POST -> 201 ( Created ) <-OK
+
+- ID ( Gerado) <-OK
+- client <-OK
+- produtos <-OK
+- total <- OK
+
+
+
+1 - Haja autenticação. ( Caso não esteja autenticado retona no NOT_AUTHORARIZED) <-OK
+2 - Migrations disso tudo. `php migration` ( deve conseguir subir toda a base.) <-OK
+3 - Logs Relatório de vendas e de quem vendeu. Precisa ser um arquivo, não pode ser um JSON e precisa ser baixado. <- OK
+4 - Ao concluír uma compra, enviar um e-mail de validação. ( faça como um Job )
+
+
+- Métodos no máximo de 100 linhas
+- Quantidade de ifs
+
