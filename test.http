@@ -1,0 +1,77 @@
+# Criar cliente
+POST http://127.0.0.1:8000/api/clients HTTP/1.1
+Content-Type: application/json
+Accept: application/json
+APP_KEY: MyAuthKey
+
+{
+    "nome": "Maria Silva Dois",
+    "documento": "211.885.460-90",
+    "email": "mail121@gmail.com"
+}
+
+###
+
+# Buscar cliente específico
+GET http://127.0.0.1:8000/api/clients/1 HTTP/1.1
+Content-Type: application/json
+Accept: application/json
+APP_KEY: MyAuthKey
+
+###
+
+# Buscar pedidos de clientes
+GET http://127.0.0.1:8000/api/clients HTTP/1.1
+Content-Type: application/json
+Accept: application/json
+APP_KEY: MyAuthKey
+
+{
+    "pedido_data_maior": 0,
+    "pedido_total_menor_igual": 60,
+    "pedido_total_maior": 26,
+    "exportar": 0
+}
+
+###
+
+# Criar produto
+POST http://127.0.0.1:8000/api/products HTTP/1.1
+Content-Type: application/json
+Accept: application/json
+APP_KEY: MyAuthKey
+
+{
+    
+}
+
+###
+
+# Buscar produto específico
+GET http://127.0.0.1:8000/api/products/1 HTTP/1.1
+Content-Type: application/json
+Accept: application/json
+APP_KEY: MyAuthKey
+
+###
+
+# Criar pedido
+POST http://127.0.0.1:8000/api/order HTTP/1.1
+Content-Type: application/json
+Accept: application/json
+APP_KEY: MyAuthKey
+
+{
+    "client_id": 1,
+    "produtos": "{\"data\":{\"product_id\":1,\"qtd\":9,\"un\":1.25},{\"product_id\":2,\"qtd\":4,\"un\":3.45}}",
+    "total": 25.05
+}
+
+###
+
+# Download relatório
+GET http://127.0.0.1:8000/api/order/file HTTP/1.1
+Accept: */*
+APP_KEY: MyAuthKey
+
+###
