@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Models\Order;
 use Illuminate\Http\Request;
+use App\Models\Client;
+use App\Jobs\MailJob;
 
 class OrderController extends Controller
 {
@@ -27,7 +29,6 @@ class OrderController extends Controller
         foreach($table as $row) {
             fputcsv($handle, array($row['id'], $row['client_id'], $row['produtos'], $row['total'], $row['created_at']));
         }
-
         fclose($handle);
         
         $headers = ['Content-Type' => 'text/csv'];
@@ -57,6 +58,8 @@ class OrderController extends Controller
         ];
 
         $this->validate($request, $rules, $customMessages);
+        $mail = Client::find(request('client_id'))->email;
+        dispatch(new MailJob($mail));
 
         return Order::create([
             'client_id' => request('client_id'),

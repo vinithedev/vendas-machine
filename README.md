@@ -1,6 +1,6 @@
 # Cadastro de cliente CRUD
 
-/clients
+/clients <-OK
 
 POST -> 201 ( Created ) <-OK
 
@@ -38,7 +38,7 @@ PARAMS
     - Data Para frente do pedido <-OK
     - Até Valor do Pedido ( Pedidos com valor até tanto) <-OK
     - Acima de valor do Pedido ( Pedidos com valor até tanto) <-OK
-    - Exportar como relatório `Se passar o parametro deverá exportar como um relatório e enviar por e-mail, fazer como um job.`
+    - Exportar como relatório `Se passar o parametro deverá exportar como um relatório e enviar por e-mail, fazer como um job.` <-OK
 
 ```json
 [
@@ -57,7 +57,7 @@ PARAMS
 ```
 
 
-Em caso de falha retornar um Bad Request ( 400 )
+Em caso de falha retornar um Bad Request ( 400 ) <- OK
 Exemplo de retorno.
 ```json
 
@@ -142,7 +142,7 @@ POST -> 201 ( Created ) <-OK
 1 - Haja autenticação. ( Caso não esteja autenticado retona no NOT_AUTHORARIZED) <-OK
 2 - Migrations disso tudo. `php migration` ( deve conseguir subir toda a base.) <-OK
 3 - Logs Relatório de vendas e de quem vendeu. Precisa ser um arquivo, não pode ser um JSON e precisa ser baixado. <- OK
-4 - Ao concluír uma compra, enviar um e-mail de validação. ( faça como um Job )
+4 - Ao concluír uma compra, enviar um e-mail de validação. ( faça como um Job ) <-OK
 
 
 - Métodos no máximo de 100 linhas

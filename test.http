@@ -27,10 +27,10 @@ Accept: application/json
 APP_KEY: MyAuthKey
 
 {
-    "pedido_data_maior": 0,
+    "pedido_data_maior": "18:45:2020-01-20",
     "pedido_total_menor_igual": 60,
     "pedido_total_maior": 26,
-    "exportar": 0
+    "exportar": "teste@teste.com"
 }
 
 ###

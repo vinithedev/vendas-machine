@@ -2,10 +2,15 @@
 
 namespace App\Http\Controllers;
 
+use App\Mail\WelcomeMail;
 use Illuminate\Http\Request;
 use App\Models\Client;
 use Illuminate\Validation\Validator;
 use App\Models\Order;
+use Illuminate\Support\Facades\Mail;
+use Illuminate\Bus\Queueable;
+use App\Jobs\MailJob;
+use App\Http\Requests\ClientRequest;
 
 class ClientController extends Controller
 {
@@ -19,7 +24,7 @@ class ClientController extends Controller
         //
     }
 
-    public function pedidos(Request $request)
+    public function pedidos(ClientRequest $request)
     {
         $data = Order::all();
 
@@ -33,16 +38,29 @@ class ClientController extends Controller
             $data = $data->where('total', '>', $request->pedido_total_maior);
         }
         if ($request->has('exportar')) {
-            // - Exportar como relatório `Se passar o parametro deverá exportar como um relatório e enviar por e-mail, fazer como um job.`
+            $rules = ['exportar' => 'email:rfc'];
+            $customMessages = ['email' => 'E-mail invalido'];
+            $this->validate($request, $rules, $customMessages);
+
+            $filename = time() . "orders.csv";
+            $handle = fopen($filename, 'w+');
+            fputcsv($handle, array('id', 'client_id', 'produtos', 'total', 'created_at'));
+
+            foreach($data as $row) {
+                fputcsv($handle, array($row['id'], $row['client_id'], $row['produtos'], $row['total'], $row['created_at']));
+            }
+            fclose($handle);
+            
+            dispatch(new MailJob($request->exportar, public_path() . '/' . $filename));
         }
 
-        $z = response()->json([
+        $r = response()->json([
             "client_id" => $data[0]->client_id,
             "name" => Client::find($data[0]->client_id)->nome,
             "orders" => $data->where('client_id', '=', $data[0]->client_id)
         ]);
 
-        return $z;
+        return $r;
     }
 
     /**
