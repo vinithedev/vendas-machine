@@ -6,6 +6,7 @@ use App\Models\Order;
 use Illuminate\Http\Request;
 use App\Models\Client;
 use App\Jobs\MailJob;
+use App\Models\Product;
 
 class OrderController extends Controller
 {
@@ -46,8 +47,7 @@ class OrderController extends Controller
     {
         $rules = [
             'client_id' => 'required',
-            'produtos' => 'required',
-            'total' => 'required',
+            'produtos' => 'required'
         ];
         
         $customMessages = [
@@ -60,12 +60,31 @@ class OrderController extends Controller
         $this->validate($request, $rules, $customMessages);
         $mail = Client::find(request('client_id'))->email;
         dispatch(new MailJob($mail));
+        
+        $products = $request->json()->get('produtos');
+        $n = 0;
+        $total = 0;
+        foreach ($products as $val) {
+            $p_id = $val['product_id'];
+            $p_info = Product::find($p_id);
+            $p_amount = $val['amount'];
+
+            if (!$p_info) {
+                return response()->json(['message' => 'produto com id ' . $p_id . ' nao existe'], 404);
+            }
+            
+            $p_total = $p_info->price * $p_amount;
+            $products[$n]['total'] = $p_total;
+            $total = $total + $p_total;
+            $n++;
+        }
 
         return Order::create([
-            'client_id' => request('client_id'),
-            'produtos' => request('produtos'),
-            'total' => request('total'),
+            'client_id' => $request->json()->get('client_id'),
+            'produtos' => json_encode($products),
+            'total' => $total
         ]);
+        
     }
 
     /**
