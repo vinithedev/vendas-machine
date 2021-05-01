@@ -61,7 +61,7 @@ class OrderController extends Controller
         $mail = Client::find(request('client_id'))->email;
         dispatch(new MailJob($mail));
         
-        $products = $request->json()->get('produtos');
+        $products = $request->get('produtos');
         $n = 0;
         $total = 0;
         foreach ($products as $val) {

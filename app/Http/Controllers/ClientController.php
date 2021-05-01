@@ -55,13 +55,21 @@ class ClientController extends Controller
             dispatch(new MailJob($request->exportar, public_path() . '/' . $filename));
         }
 
-        $r = response()->json([
-            "client_id" => $data[0]->client_id,
-            "name" => Client::find($data[0]->client_id)->nome,
-            "orders" => $data->where('client_id', '=', $data[0]->client_id)
-        ]);
+        if ($data->isEmpty()) {
+            return response()->json([], 200);
+        }
+        
+        $d = $data->groupBy('client_id');
+        $arr = [];
+        foreach ($d as $client_id => $val) {
+            $arr[] = [
+                "client_id" => $client_id,
+                "name" => Client::find($client_id)->nome,
+                "order" => $val
+            ];
+        }
 
-        return $r;
+        return $arr;
     }
 
     /**
